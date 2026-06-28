@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model RevenueEvent {
+  id            String   @id @default(uuid())
+  orderId       String   @unique
+  amount        Decimal  @db.Decimal(10, 2)
+  paymentMethod String
+  bookType      String
+  currency      String   @default("MZN")
+  eventDate     DateTime @db.Date
+  createdAt     DateTime @default(now())
+
+  @@map("revenue_events")
+}
+
+model UserEvent {
+  id        String   @id @default(uuid())
+  userId    String
+  eventType String
+  eventDate DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  @@map("user_events")
+}
+
+model BookEvent {
+  id        String   @id @default(uuid())
+  bookId    String
+  bookTitle String
+  bookType  String   @default("EBOOK")
+  eventType String
+  eventDate DateTime @db.Date
+  createdAt DateTime @default(now())
+
+  @@map("book_events")
+}
+
+model SubscriptionEvent {
+  id             String   @id @default(uuid())
+  subscriptionId String
+  planType       String
+  eventType      String
+  eventDate      DateTime @db.Date
+  createdAt      DateTime @default(now())
+
+  @@unique([subscriptionId, eventType])
+  @@map("subscription_events")
+}
+
+model DeliveryEvent {
+  id         String   @id @default(uuid())
+  deliveryId String
+  province   String
+  status     String
+  eventDate  DateTime @db.Date
+  createdAt  DateTime @default(now())
+
+  @@map("delivery_events")
+}
+
+model DailySnapshot {
+  id                  String   @id @default(uuid())
+  snapshotDate        DateTime @unique @db.Date
+  totalRevenue        Decimal  @default(0) @db.Decimal(12, 2)
+  totalOrders         Int      @default(0)
+  newUsers            Int      @default(0)
+  activeSubscriptions Int      @default(0)
+  newSubscriptions    Int      @default(0)
+  pendingDeliveries   Int      @default(0)
+  completedDeliveries Int      @default(0)
+  createdAt           DateTime @default(now())
+
+  @@map("daily_snapshots")
+}
