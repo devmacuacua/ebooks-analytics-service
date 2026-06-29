@@ -64,6 +64,15 @@ model DeliveryEvent {
   @@map("delivery_events")
 }
 
+model PlatformSetting {
+  key       String   @id
+  value     String
+  updatedBy String   @default("system")
+  updatedAt DateTime @updatedAt
+
+  @@map("platform_settings")
+}
+
 model DailySnapshot {
   id                  String   @id @default(uuid())
   snapshotDate        DateTime @unique @db.Date
